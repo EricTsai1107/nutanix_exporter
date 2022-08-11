@@ -20,7 +20,6 @@ type VirtualDiskEntity struct {
         Id              string  `json:"virtual_disk_id"`
         HostName            string  `json:"attached_vmname"`
         Stats           map[string]string       `json:"stats"`
-        UsageStats      map[string]string       `json:"usage_stats"`
 	DiskMb		float64 `json:"disk_capacity_in_bytes"`
 	NutanixNFSFilePath	string	`json:"nutanix_nfsfile_path"`
 }
