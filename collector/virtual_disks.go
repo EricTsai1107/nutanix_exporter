@@ -96,16 +96,16 @@ var virtualdisksUsageStats map[string]string = map[string]string {
 	"storage.usage_bytes": "...",
 }
 
-type virtualdisksExporter struct {
-        DiskMB          *prometheus.GaugeVec
+type VirtualDisksExporter struct {
+        DiskMb          *prometheus.GaugeVec
 	Stats		map[string]*prometheus.GaugeVec
 	UsageStats	map[string]*prometheus.GaugeVec
 }
 
 
 func (e *VirtualDisksExporter) Describe(ch chan<- *prometheus.Desc) {
-	e.DiskMB = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: virtualdisksNamespace, Name: "disk_mb", Help: "Disk Size of Virtual Disk",}, virtualdisksLabels, )
-        e.DiskMB.Describe(ch)
+	e.DiskMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: virtualdisksNamespace, Name: "disk_mb", Help: "Disk Size of Virtual Disk",}, virtualdisksLabels, )
+        e.DiskMb.Describe(ch)
 
 
 	e.Stats = make(map[string]*prometheus.GaugeVec)
@@ -128,21 +128,21 @@ func (e *VirtualDisksExporter) Collect(ch chan<- prometheus.Metric) {
 
 	for _, s := range virtualdisks {
 	        {
-		        g := e.DiskMB.WithLabelValues(s.MountPath, s.Name, s.Location, s.DiskStatus)
-			g.Set(int(s.DiskMB))
+		        g := e.DiskMb.WithLabelValues(s.HostName, s.Id, s.NutanixNFSFilePath)
+			g.Set(float64(s.DiskMb))
 	                g.Collect(ch)
 		}
 
 
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
-			g := k.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus)
+			g := k.WithLabelValues(s.HostName, s.Id, s.NutanixNFSFilePath)
 			g.Set(v)
 			g.Collect(ch)
 		}
 		for i, k := range e.Stats {
 			v, _ := strconv.ParseFloat(s.Stats[i], 64)
-			g := k.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus)
+			g := k.WithLabelValues(s.HostName, s.Id, s.NutanixNFSFilePath)
 			g.Set(v)
 			g.Collect(ch)
 		}
