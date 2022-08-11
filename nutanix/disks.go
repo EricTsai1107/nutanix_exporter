@@ -26,7 +26,7 @@ type DiskEntity struct {
 	DiskStatus	string	`json:"disk_status"`
 	Online		int	`json:"online"`
 	DiskSize	int64	`json:"disk_size"`
-	Location	string	`json:"location"`
+	Location	int	`json:"location"`
 }
 
 func (n *Nutanix) GetDisks() []*DiskEntity {
