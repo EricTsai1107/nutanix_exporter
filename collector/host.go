@@ -17,7 +17,7 @@ type HostStat struct {
 
 var (
 	hostNamespace string = "nutanix_host"
-	hostLabels	 []string = []string{"hostname"}
+	hostLabels	 []string = []string{"hostname", "cluster"}
 )
 
 var hostStats map[string]string = map[string]string {
@@ -160,40 +160,46 @@ func (e *HostExporter) Describe(ch chan<- *prometheus.Desc) {
 func (e *HostExporter) Collect(ch chan<- prometheus.Metric) {
 	hosts := nutanixApi.GetHosts()
 	for _, s := range hosts {
+		if s.Name in ("KHASETNX01", "KHASETNX02", "KHASETNX03") {
+			s.ClusterName = "KHASETNX-K11"
+		} else {
+			s.ClusterName = "KHASETNX-K24"
+		}
+
 		{
-			g := e.NumVms.WithLabelValues(s.Name)
+			g := e.NumVms.WithLabelValues(s.Name, s.ClusterName)
 			g.Set(float64(s.NumVms))
 			g.Collect(ch)
 
-			g = e.BootTime.WithLabelValues(s.Name)
+			g = e.BootTime.WithLabelValues(s.Name, s.ClusterName)
                         g.Set(float64(s.BootTime))
                         g.Collect(ch)
 
-                        g = e.NumCpuCores.WithLabelValues(s.Name)
+                        g = e.NumCpuCores.WithLabelValues(s.Name, s.ClusterName)
                         g.Set(float64(s.NumCpuCores))
                         g.Collect(ch)
 
-                        g = e.MemoryCapacity.WithLabelValues(s.Name)
+                        g = e.MemoryCapacity.WithLabelValues(s.Name, s.ClusterName)
                         g.Set(float64(s.MemoryCapacity))
                         g.Collect(ch)
 
-                        g = e.CpuCapacity.WithLabelValues(s.Name)
+                        g = e.CpuCapacity.WithLabelValues(s.Name, s.ClusterName)
                         g.Set(float64(s.CpuCapacity))
                         g.Collect(ch)
 
-                        g = e.CpuFrequency.WithLabelValues(s.Name)
+                        g = e.CpuFrequency.WithLabelValues(s.Name, s.ClusterName)
                         g.Set(float64(s.CpuFrequency))
                         g.Collect(ch)
 		}
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
-			g := k.WithLabelValues(s.Name)
+			g := k.WithLabelValues(s.Name, s.ClusterName)
 			g.Set(v)
 			g.Collect(ch)
 		}
 		for i, k := range e.Stats {
 			v, _ := strconv.ParseFloat(s.Stats[i], 64)
-			g := k.WithLabelValues(s.Name)
+			g := k.WithLabelValues(s.Name, s.ClusterName)
 			g.Set(v)
 			g.Collect(ch)
 		}
