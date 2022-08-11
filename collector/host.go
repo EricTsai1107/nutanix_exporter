@@ -160,7 +160,7 @@ func (e *HostExporter) Describe(ch chan<- *prometheus.Desc) {
 func (e *HostExporter) Collect(ch chan<- prometheus.Metric) {
 	hosts := nutanixApi.GetHosts()
 	for _, s := range hosts {
-		if s.Name in ("KHASETNX01", "KHASETNX02", "KHASETNX03") {
+		if (s.Name == "KHASETNX01") || (s.Name == "KHASETNX02") || (s.Name == "KHASETNX03") {
 			s.ClusterName = "KHASETNX-K11"
 		} else {
 			s.ClusterName = "KHASETNX-K24"
