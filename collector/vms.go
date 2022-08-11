@@ -162,20 +162,24 @@ func (e *VmsExporter) Collect(ch chan<- prometheus.Metric) {
                         g.Set(float64(s.NumVCpus))
                         g.Collect(ch)
 
-                        g := e.MemoryMb.WithLabelValues(s.Name, s.HostName)
+                        g = e.MemoryMb.WithLabelValues(s.Name, s.HostName)
                         g.Set(float64(s.MemoryMb))
                         g.Collect(ch)
 
-                        g := e.MemoryCapMb.WithLabelValues(s.Name, s.HostName)
+                        g = e.MemoryCapMb.WithLabelValues(s.Name, s.HostName)
                         g.Set(float64(s.MemoryCapMb))
                         g.Collect(ch)
 
-                        g := e.DiskMb.WithLabelValues(s.Name, s.HostName)
+                        g = e.DiskMb.WithLabelValues(s.Name, s.HostName)
                         g.Set(float64(s.DiskMb))
                         g.Collect(ch)
 
-                        g := e.PowerState.WithLabelValues(s.Name, s.HostName)
-                        g.Set(float64(s.PowerState))
+                        g = e.PowerState.WithLabelValues(s.Name, s.HostName)
+			if(s.PowerState == "on") {
+				g.Set(float64("1"))
+			} else {
+				g.Set(float64("0"))
+			}
                         g.Collect(ch)
 
 		}

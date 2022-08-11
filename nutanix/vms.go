@@ -26,7 +26,7 @@ type VmEntity struct {
 	MemoryMb	float64	`json:"memoryCapacityInBytes"`
 	MemoryCapMb	float64 `json:"memoryReservedCapacityInBytes"`
 	DiskMb		float64 `json:"diskCapacityInBytes"`
-	PowerState	string	`json:"power_state"`
+	PowerState	string	`json:"powerState"`
 }
 
 func (n *Nutanix) GetVms() []*VmEntity {
