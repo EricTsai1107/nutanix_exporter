@@ -139,12 +139,14 @@ func (e *VmsExporter) Collect(ch chan<- prometheus.Metric) {
 	for _, s := range vms {
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
-			g := k.WithLabelValues(s.Name, s.HostName).Set(v)
+			g := k.WithLabelValues(s.Name, s.HostName)
+			g.Set(v)
 			g.Collect(ch)
 		}
 		for i, k := range e.Stats {
 			v, _ := strconv.ParseFloat(s.Stats[i], 64)
-			g := k.WithLabelValues(s.Name, s.HostName).Set(v)
+			g := k.WithLabelValues(s.Name, s.HostName)
+			g.Set(v)
 			g.Collect(ch)
 		}
 	}

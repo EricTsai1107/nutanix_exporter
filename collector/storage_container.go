@@ -166,7 +166,7 @@ type StorageExporter struct {
 }
 
 func (e *StorageExporter) Describe(ch chan<- *prometheus.Desc) {
-	e.MaxCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "max_capacity", Help: "Disk Max Capacity of Storage",}, hostLabels, )
+	e.MaxCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "max_capacity", Help: "Disk Max Capacity of Storage",}, storageLabels, )
         e.MaxCapacity.Describe(ch)
 
 
@@ -190,19 +190,22 @@ func (e *StorageExporter) Collect(ch chan<- prometheus.Metric) {
 
 	for _, s := range storages {
                 {
-                        g := e.MaxCapacity.WithLabelValues(s.Name, s.Id).Set(float64(s.MaxCapacity))
+                        g := e.MaxCapacity.WithLabelValues(s.Name, s.Id)
+			g.Set(float64(s.MaxCapacity))
                         g.Collect(ch)
                 }
 
 
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
-			g := k.WithLabelValues(s.Name, s.Id).Set(v)
+			g := k.WithLabelValues(s.Name, s.Id)
+			g.Set(v)
 			g.Collect(ch)
 		}
 		for i, k := range e.Stats {
 			v, _ := strconv.ParseFloat(s.Stats[i], 64)
-			g := k.WithLabelValues(s.Name, s.Id).Set(v)
+			g := k.WithLabelValues(s.Name, s.Id)
+			g.Set(v)
 			g.Collect(ch)
 		}
 	}
