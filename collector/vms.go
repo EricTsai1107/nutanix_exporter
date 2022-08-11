@@ -114,11 +114,31 @@ var vmsUsageStats map[string]string = map[string]string {
 }
 
 type VmsExporter struct {
+	NumVCpus        *prometheus.GaugeVec
+	MemoryMb        *prometheus.GaugeVec
+	MemoryCapMb     *prometheus.GaugeVec
+	DiskMb          *prometheus.GaugeVec
+	PowerState      *prometheus.GaugeVec
 	Stats		map[string]*prometheus.GaugeVec
 	UsageStats	map[string]*prometheus.GaugeVec
 }
 
 func (e *VmsExporter) Describe(ch chan<- *prometheus.Desc) {
+        e.NumVCpus = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "num_vcpus", Help: "Virtual CPUs of VM",}, vmsLabels, )
+        e.NumVCpus.Describe(ch)
+
+        e.MemoryMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "memory_mb", Help: "Memory in MB of VM",}, vmsLabels, )
+        e.MemoryMb.Describe(ch)
+
+        e.MemoryCapMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "memory_capacity_mb", Help: "Memory Capacity in MB of VM",}, vmsLabels, )
+        e.MemoryCapMb.Describe(ch)
+
+        e.DiskMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "disk_mb", Help: "Disk Size in MB of VM",}, vmsLabels, )
+        e.DiskMb.Describe(ch)
+
+        e.PowerState = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "power_state", Help: "Power State Of VM",}, vmsLabels, )
+        e.PowerState.Describe(ch)
+
 	e.Stats = make(map[string]*prometheus.GaugeVec)
 	for k, h := range vmsStats {
 		name := normalizeFQN(k)
@@ -137,6 +157,28 @@ func (e *VmsExporter) Describe(ch chan<- *prometheus.Desc) {
 func (e *VmsExporter) Collect(ch chan<- prometheus.Metric) {
 	vms := nutanixApi.GetVms()
 	for _, s := range vms {
+		{
+                        g := e.NumVCpus.WithLabelValues(s.Name, s.HostName)
+                        g.Set(float64(s.NumVCpus))
+                        g.Collect(ch)
+
+                        g := e.MemoryMb.WithLabelValues(s.Name, s.HostName)
+                        g.Set(float64(s.MemoryMb))
+                        g.Collect(ch)
+
+                        g := e.MemoryCapMb.WithLabelValues(s.Name, s.HostName)
+                        g.Set(float64(s.MemoryCapMb))
+                        g.Collect(ch)
+
+                        g := e.DiskMb.WithLabelValues(s.Name, s.HostName)
+                        g.Set(float64(s.DiskMb))
+                        g.Collect(ch)
+
+                        g := e.PowerState.WithLabelValues(s.Name, s.HostName)
+                        g.Set(float64(s.PowerState))
+                        g.Collect(ch)
+
+		}
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
 			g := k.WithLabelValues(s.Name, s.HostName)
