@@ -24,7 +24,7 @@ type DiskEntity struct {
         UsageStats      map[string]string       `json:"usage_stats"`
 	StorageTierName string  `json:"storage_tier_name"`
 	DiskStatus	string	`json:"disk_status"`
-	Online		bool	`json:"online"`
+	Online		int	`json:"online"`
 	DiskSize	int64	`json:"disk_size"`
 	Location	string	`json:"location"`
 }
