@@ -132,25 +132,21 @@ func (e *DisksExporter) Collect(ch chan<- prometheus.Metric) {
 
 	for _, s := range disks {
                 {
-                        g := e.Online.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus)
-                        g.Set(float64(s.Online))
+                        g := e.Online.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus).Set(float64(s.Online))
                         g.Collect(ch)
 
-                        g = e.DiskSize.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus)
-                        g.Set(float64(s.DiskSize))
+                        g = e.DiskSize.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus).Set(float64(s.DiskSize))
                         g.Collect(ch)
                 }
 
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
-			g := k.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus)
-			g.Set(v)
+			g := k.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus).Set(v)
 			g.Collect(ch)
 		}
 		for i, k := range e.Stats {
 			v, _ := strconv.ParseFloat(s.Stats[i], 64)
-			g := k.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus)
-			g.Set(v)
+			g := k.WithLabelValues(s.MountPath, s.HostName, s.Location, s.DiskStatus).Set(v)
 			g.Collect(ch)
 		}
 	}

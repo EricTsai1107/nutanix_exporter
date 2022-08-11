@@ -128,22 +128,19 @@ func (e *VirtualDisksExporter) Collect(ch chan<- prometheus.Metric) {
 
 	for _, s := range virtualdisks {
 	        {
-		        g := e.DiskMb.WithLabelValues(s.HostName, s.Id, s.NutanixNFSFilePath)
-			g.Set(float64(s.DiskMb))
+		        g := e.DiskMb.WithLabelValues(s.HostName, s.Id, s.NutanixNFSFilePath).Set(float64(s.DiskMb))
 	                g.Collect(ch)
 		}
 
 
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
-			g := k.WithLabelValues(s.HostName, s.Id, s.NutanixNFSFilePath)
-			g.Set(v)
+			g := k.WithLabelValues(s.HostName, s.Id, s.NutanixNFSFilePath).Set(v)
 			g.Collect(ch)
 		}
 		for i, k := range e.Stats {
 			v, _ := strconv.ParseFloat(s.Stats[i], 64)
-			g := k.WithLabelValues(s.HostName, s.Id, s.NutanixNFSFilePath)
-			g.Set(v)
+			g := k.WithLabelValues(s.HostName, s.Id, s.NutanixNFSFilePath).Set(v)
 			g.Collect(ch)
 		}
 	}

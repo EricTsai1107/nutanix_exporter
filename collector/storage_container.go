@@ -190,22 +190,19 @@ func (e *StorageExporter) Collect(ch chan<- prometheus.Metric) {
 
 	for _, s := range storages {
                 {
-                        g := e.MaxCapacity.WithLabelValues(s.Name, s.Id)
-                        g.Set(float64(s.MaxCapacity))
+                        g := e.MaxCapacity.WithLabelValues(s.Name, s.Id).Set(float64(s.MaxCapacity))
                         g.Collect(ch)
                 }
 
 
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
-			g := k.WithLabelValues(s.Name, s.Id)
-			g.Set(v)
+			g := k.WithLabelValues(s.Name, s.Id).Set(v)
 			g.Collect(ch)
 		}
 		for i, k := range e.Stats {
 			v, _ := strconv.ParseFloat(s.Stats[i], 64)
-			g := k.WithLabelValues(s.Name, s.Id)
-			g.Set(v)
+			g := k.WithLabelValues(s.Name, s.Id).Set(v)
 			g.Collect(ch)
 		}
 	}
