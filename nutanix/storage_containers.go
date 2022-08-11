@@ -7,11 +7,6 @@ type StorageEntity struct {
 	Id				string  `json:"id"`
 	Name				string  `json:"name"`
 	MaxCapacity			uint64	`json:"max_capacity"`
-//	TotalExplicitReservedCapacity	uint64	`json:"total_explicit_reserved_capacity"`
-//	TotalImplicitReservedCapacity	uint64	`json:"total_implicit_reserved_capacity"`
-//	AdvertisedCapacity		uint64	`json:"advertised_capacity"`
-//	ReplicationFactor		uint	`json:"replication_factor"`
-//	OplogReplicationFactor		uint	`json:"oplog_replication_factor"`
 	Stats				map[string]string	`json:"stats"`
 	UsageStats			map[string]string	`json:"usage_stats"`
 }

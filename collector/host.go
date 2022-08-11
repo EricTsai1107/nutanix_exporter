@@ -3,7 +3,7 @@ package collector
 
 //import "encoding/json"
 import (
-	"github.com/claranet/nutanix-exporter/nutanix"
+	"github.com/crlintsai/nutanix-exporter/nutanix"
 	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -119,12 +119,28 @@ var hostUsageStats map[string]string = map[string]string {
 
 type HostExporter struct {
 	NumVms		*prometheus.GaugeVec
+	BootTime	*prometheus.GaugeVec
+	NumCpuCores	*prometheus.GaugeVec
+	MemoryCapacity	*prometheus.GaugeVec
+	CpuCapacity	*prometheus.GaugeVec
+	CpuFrequency	*prometheus.GaugeVec
 	Stats		map[string]*prometheus.GaugeVec
 	UsageStats	map[string]*prometheus.GaugeVec
 }
 
 func (e *HostExporter) Describe(ch chan<- *prometheus.Desc) {
 	e.NumVms = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "count_vms", Help: "Count vms on each host",}, hostLabels, )
+	e.NumVms.Describe(ch)
+	e.BootTime = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "boot_time", Help: "Boot Time on each host",}, hostLabels, )
+	e.BootTime.Describe(ch)
+	e.NumCpuCores = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "num_cpu_cores", Help: "Number of CPU Cores on each host",}, hostLabels, )
+	e.NumCpuCores.Describe(ch)
+	e.MemoryCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "memory_capacity", Help: "Memory Capacity on each host",}, hostLabels, )
+	e.MemoryCapacity.Describe(ch)
+	e.CpuCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "cpu_capacity", Help: "CPU Capacity on each host",}, hostLabels, )
+	e.CpuCapacity.Describe(ch)
+	e.CpuFrequency = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "cpu_frequency", Help: "CPU Frequency on each host",}, hostLabels, )
+	e.CpuFrequency.Describe(ch)
 
 	e.Stats = make(map[string]*prometheus.GaugeVec)
 	for k, h := range hostStats {
@@ -148,6 +164,26 @@ func (e *HostExporter) Collect(ch chan<- prometheus.Metric) {
 			g := e.NumVms.WithLabelValues(s.Name)
 			g.Set(float64(s.NumVms))
 			g.Collect(ch)
+
+			g = e.NumVms.WithLabelValues(s.Name)
+                        g.Set(float64(s.BootTime))
+                        g.Collect(ch)
+
+                        g = e.NumVms.WithLabelValues(s.Name)
+                        g.Set(float64(s.NumCpuCores))
+                        g.Collect(ch)
+
+                        g = e.NumVms.WithLabelValues(s.Name)
+                        g.Set(float64(s.MemoryCapacity))
+                        g.Collect(ch)
+
+                        g = e.NumVms.WithLabelValues(s.Name)
+                        g.Set(float64(s.CpuCapacity))
+                        g.Collect(ch)
+
+                        g = e.NumVms.WithLabelValues(s.Name)
+                        g.Set(float64(s.CpuFrequency))
+                        g.Collect(ch)
 		}
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)

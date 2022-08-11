@@ -13,8 +13,8 @@ import (
 	"flag"
 	"net/http"
 
-	"github.com/claranet/nutanix-exporter/collector"
-	"github.com/claranet/nutanix-exporter/nutanix"
+	"./collector"
+	"./nutanix"
 
 	//	"time"
 	//	"regexp"
@@ -98,6 +98,8 @@ func main() {
 		registry.MustRegister(collector.NewClusterExporter(nutanixAPI))
 		registry.MustRegister(collector.NewHostExporter(nutanixAPI))
 		registry.MustRegister(collector.NewVmsExporter(nutanixAPI))
+		registry.MustRegister(collector.NewDisksExporter(nutanixAPI))
+		registry.MustRegister(collector.NewVirtualDisksExporter(nutanixAPI))
 
 		h := promhttp.HandlerFor(registry, promhttp.HandlerOpts{})
 		h.ServeHTTP(w, r)

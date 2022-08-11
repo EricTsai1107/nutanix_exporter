@@ -3,7 +3,7 @@ package collector
 
 //import "encoding/json"
 import (
-	"github.com/claranet/nutanix-exporter/nutanix"
+	"github.com/crlintsai/nutanix-exporter/nutanix"
 	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -17,7 +17,7 @@ type StorageStat struct {
 
 var (
 	storageNamespace string = "nutanix_storage_cluster"
-	storageLabels	  []string = []string{"storage", "uuid"}
+	storageLabels	  []string = []string{"storage", "id"}
 )
 
 var storageStats map[string]string = map[string]string {
@@ -106,15 +106,19 @@ var storageUsageStats map[string]string = map[string]string {
 	"data_reduction.erasure_coding.user_pre_reduction_bytes": "...",
 	"storage.user_unreserved_capacity_bytes": "...",
 	"storage.user_capacity_bytes": "...",
+	"storage.recycle_bin_usage_bytes": "...",
 	"storage.user_storage_pool_capacity_bytes": "...",
+	"storage.logical_snapshot_usage_bytes": "...",
 	"data_reduction.pre_reduction_bytes": "...",
 	"data_reduction.user_pre_reduction_bytes": "...",
 	"storage.user_other_containers_reserved_capacity_bytes": "...",
 	"data_reduction.erasure_coding.pre_reduction_bytes": "...",
 	"storage.capacity_bytes": "...",
+	"storage.container_reserved_capacity_bytes": "...",
 	"storage.user_unreserved_free_bytes": "...",
 	"data_reduction.clone.user_saved_bytes": "...",
 	"data_reduction.dedup.post_reduction_bytes": "...",
+	"storage.snapshot_reclaimable_bytes": "...",
 	"data_reduction.clone.saving_ratio_ppm": "...",
 	"storage.logical_usage_bytes": "...",
 	"data_reduction.saved_bytes": "...",
@@ -139,6 +143,7 @@ var storageUsageStats map[string]string = map[string]string {
 	"storage.unreserved_own_usage_bytes": "...",
 	"data_reduction.erasure_coding.saving_ratio_ppm": "...",
 	"storage.user_reserved_capacity_bytes": "...",
+	"storage.user_container_reserved_capacity_bytes": "...",
 	"data_reduction.thin_provision.user_saved_bytes": "...",
 	"storage.disk_physical_usage_bytes": "...",
 	"data_reduction.erasure_coding.user_post_reduction_bytes": "...",
@@ -151,14 +156,20 @@ var storageUsageStats map[string]string = map[string]string {
 	"data_reduction.thin_provision.saving_ratio_ppm": "...",
 	"storage.reserved_capacity_bytes": "...",
 	"storage.user_reserved_free_bytes": "...",
+	"storage.recycle_bin_logical_usage_bytes": "...",
 }
 
 type StorageExporter struct {
+        MaxCapacity     *prometheus.GaugeVec
 	Stats		map[string]*prometheus.GaugeVec
 	UsageStats	map[string]*prometheus.GaugeVec
 }
 
 func (e *StorageExporter) Describe(ch chan<- *prometheus.Desc) {
+	e.MaxCapacity = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "max_capacity", Help: "Disk Max Capacity of Storage",}, hostLabels, )
+        e.MaxCapacity.Describe(ch)
+
+
 	e.Stats = make(map[string]*prometheus.GaugeVec)
 	for k, h := range storageStats {
 		name := normalizeFQN(k)
@@ -176,7 +187,15 @@ func (e *StorageExporter) Describe(ch chan<- *prometheus.Desc) {
 
 func (e *StorageExporter) Collect(ch chan<- prometheus.Metric) {
 	storages := nutanixApi.GetStorageContainers()
+
 	for _, s := range storages {
+                {
+                        g := e.MaxCapacity.WithLabelValues(s.Name, s.Id)
+                        g.Set(float64(s.MaxCapacity))
+                        g.Collect(ch)
+                }
+
+
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
 			g := k.WithLabelValues(s.Name, s.Id)

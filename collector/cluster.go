@@ -3,7 +3,7 @@ package collector
 
 //import "encoding/json"
 import (
-	"github.com/claranet/nutanix-exporter/nutanix"
+	"github.com/crlintsai/nutanix-exporter/nutanix"
 
 	"strconv"
 
@@ -129,8 +129,9 @@ var clusterUsageStats map[string]string = map[string]string {
 	"storage_tier.das-sata.free_bytes": "EMPTY",
 	"storage.usage_bytes": "EMPTY",
 	"data_reduction.erasure_coding.saved_bytes": "EMPTY",
+	"storage.recycle_bin_usage_bytes": "EMPTY",
 	"data_reduction.compression.pre_reduction_bytes": "EMPTY",
-	"storage_tier.das-sata.pinned_bytes": "EMPTY",
+	"storage.rebuild_capacity_bytes": "EMPTY",
 	"storage_tier.das-sata.pinned_usage_bytes": "EMPTY",
 	"data_reduction.pre_reduction_bytes": "EMPTY",
 	"storage_tier.ssd.capacity_bytes": "EMPTY",
@@ -140,6 +141,7 @@ var clusterUsageStats map[string]string = map[string]string {
 	"data_reduction.erasure_coding.pre_reduction_bytes": "EMPTY",
 	"storage.capacity_bytes": "EMPTY",
 	"data_reduction.dedup.post_reduction_bytes": "EMPTY",
+	"storage.snapshot_reclaimable_bytes": "EMPTY",
 	"data_reduction.clone.saving_ratio_ppm": "EMPTY",
 	"storage.logical_usage_bytes": "EMPTY",
 	"data_reduction.saved_bytes": "EMPTY",
@@ -149,11 +151,12 @@ var clusterUsageStats map[string]string = map[string]string {
 	"data_reduction.post_reduction_bytes": "EMPTY",
 	"data_reduction.dedup.saved_bytes": "EMPTY",
 	"data_reduction.overall.saved_bytes": "EMPTY",
+	"data_reduction.thin_provision.post_reduction_bytes": "EMPTY",
 	"data_reduction.thin_provision.saving_ratio_ppm": "EMPTY",
 	"data_reduction.compression.saving_ratio_ppm": "EMPTY",
 	"data_reduction.dedup.saving_ratio_ppm": "EMPTY",
-	"storage_tier.ssd.pinned_bytes": "EMPTY",
 	"storage.reserved_capacity_bytes": "EMPTY",
+	"data_reduction.thin_provision.pre_reduction_bytes": "EMPTY",
 }
 
 type ClusterExporter struct {
