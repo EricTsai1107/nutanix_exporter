@@ -2,7 +2,7 @@
 package collector
 
 import (
-	"github.com/crlintsai/nutanix-exporter/nutanix"
+	"github.com/crlintsai/nutanix_exporter/nutanix"
 	"strconv"
 
 	"github.com/prometheus/client_golang/prometheus"

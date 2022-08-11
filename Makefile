@@ -28,8 +28,8 @@ windows: prepare
 prepare:
 	@echo "Create output directory ./bin/"
 	mkdir -p bin/
-#	@echo "GO get dependencies"
-#	go get -d
+	@echo "GO get dependencies"
+	go get -d
 	
 
 .PHONY: all
