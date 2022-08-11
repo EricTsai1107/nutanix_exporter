@@ -124,19 +124,19 @@ type VmsExporter struct {
 }
 
 func (e *VmsExporter) Describe(ch chan<- *prometheus.Desc) {
-        e.NumVCpus = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "num_vcpus", Help: "Virtual CPUs of VM",}, vmsLabels, )
+        e.NumVCpus = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: vmsNamespace, Name: "num_vcpus", Help: "Virtual CPUs of VM",}, vmsLabels, )
         e.NumVCpus.Describe(ch)
 
-        e.MemoryMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "memory_mb", Help: "Memory in MB of VM",}, vmsLabels, )
+        e.MemoryMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: vmsNamespace, Name: "memory_mb", Help: "Memory in MB of VM",}, vmsLabels, )
         e.MemoryMb.Describe(ch)
 
-        e.MemoryCapMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "memory_capacity_mb", Help: "Memory Capacity in MB of VM",}, vmsLabels, )
+        e.MemoryCapMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: vmsNamespace, Name: "memory_capacity_mb", Help: "Memory Capacity in MB of VM",}, vmsLabels, )
         e.MemoryCapMb.Describe(ch)
 
-        e.DiskMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "disk_mb", Help: "Disk Size in MB of VM",}, vmsLabels, )
+        e.DiskMb = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: vmsNamespace, Name: "disk_mb", Help: "Disk Size in MB of VM",}, vmsLabels, )
         e.DiskMb.Describe(ch)
 
-        e.PowerState = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: hostNamespace, Name: "power_state", Help: "Power State Of VM",}, vmsLabels, )
+        e.PowerState = prometheus.NewGaugeVec(prometheus.GaugeOpts{ Namespace: vmsNamespace, Name: "power_state", Help: "Power State Of VM",}, vmsLabels, )
         e.PowerState.Describe(ch)
 
 	e.Stats = make(map[string]*prometheus.GaugeVec)
