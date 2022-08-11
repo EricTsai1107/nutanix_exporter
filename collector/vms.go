@@ -176,9 +176,9 @@ func (e *VmsExporter) Collect(ch chan<- prometheus.Metric) {
 
                         g = e.PowerState.WithLabelValues(s.Name, s.HostName)
 			if(s.PowerState == "on") {
-				g.Set(float64("1"))
+				g.Set(float64(1))
 			} else {
-				g.Set(float64("0"))
+				g.Set(float64(0))
 			}
                         g.Collect(ch)
 
