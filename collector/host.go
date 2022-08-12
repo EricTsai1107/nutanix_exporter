@@ -159,13 +159,23 @@ func (e *HostExporter) Describe(ch chan<- *prometheus.Desc) {
 
 func (e *HostExporter) Collect(ch chan<- prometheus.Metric) {
 	hosts := nutanixApi.GetHosts()
-	for _, s := range hosts {
-		if (s.Name == "KHASETNX01") || (s.Name == "KHASETNX02") || (s.Name == "KHASETNX03") {
-			s.ClusterName = "KHASETNX-K11"
-		} else {
-			s.ClusterName = "KHASETNX-K24"
-		}
+	cluster := nutanixApi.GetCluster()
 
+	for _, s := range hosts {
+//		if (s.Name == "KHASETNX01") || (s.Name == "KHASETNX02") || (s.Name == "KHASETNX03") {
+//			s.ClusterName = "KHASETNX-K11"
+//		} else {
+//			s.ClusterName = "KHASETNX-K24"
+//		}
+
+		for _, c := range cluster {
+			for _, s := range hosts {
+				if c.RackableUnits.Serial == s.serial {
+					s.ClusterName = c.Name
+					break;
+				}
+			}
+		}
 		{
 			g := e.NumVms.WithLabelValues(s.Name, s.ClusterName)
 			g.Set(float64(s.NumVms))
