@@ -170,9 +170,11 @@ func (e *HostExporter) Collect(ch chan<- prometheus.Metric) {
 
 		for _, c := range cluster {
 			for _, s := range hosts {
-				if c.RackableUnits.Serial == s.Serial {
-					s.ClusterName = c.Name
-					break;
+				for _, r := range c.RackableUnits {
+					if r.Serial == s.Serial {
+						s.ClusterName = c.Name
+						break;
+					}
 				}
 			}
 		}
