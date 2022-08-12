@@ -162,19 +162,13 @@ func (e *HostExporter) Collect(ch chan<- prometheus.Metric) {
 	cluster := nutanixApi.GetCluster()
 
 	for _, s := range hosts {
-//		if (s.Name == "KHASETNX01") || (s.Name == "KHASETNX02") || (s.Name == "KHASETNX03") {
-//			s.ClusterName = "KHASETNX-K11"
-//		} else {
-//			s.ClusterName = "KHASETNX-K24"
-//		}
-
 		for _, c := range cluster {
-			for _, s := range hosts {
-				for _, r := range c.RackableUnits {
-					if r.Serial == s.Serial {
-						s.ClusterName = c.Name
-						break;
-					}
+			for _, r := range c.RackableUnits {
+//				log.Printf("Cluster Serial=%s\n", r.Serial)
+//				log.Printf("Host Serial=%s\n", s.Serial)
+				if r.Serial == s.Serial {
+					s.ClusterName = c.Name
+					break;
 				}
 			}
 		}
