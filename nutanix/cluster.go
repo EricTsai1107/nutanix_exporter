@@ -20,7 +20,7 @@ type Cluster struct {
 	Name				string  `json:"name"`
 	NumNodes			int	`json:"num_nodes"`
 	SsdPinningPercentageLimit	int	`json:"ssd_pinning_percentage_limit"`
-	RackableUnits			[]RackableUnits	`json:"rackable_units`
+	RackableUnits			[]RackableUnits	`json:"rackable_units"`
 	Stats				map[string]string `json:"stats"`
 	UsageStats			map[string]string `json:"usage_stats"`
 }
