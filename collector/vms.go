@@ -156,7 +156,21 @@ func (e *VmsExporter) Describe(ch chan<- *prometheus.Desc) {
 
 func (e *VmsExporter) Collect(ch chan<- prometheus.Metric) {
 	vms := nutanixApi.GetVms()
+	clusters := nutanixApi.GetCluster()
+	hosts := nutanixApi.GetHosts()
+
 	for _, s := range vms {
+		for _, h := range hosts {
+			if s.HostName == h.Name {
+				for _, c := range clusters {
+					for _, r := range c.RackableUnits {
+						if r.Serial == h.Serial {
+							s.ClusterName = c.Name
+						}
+					}
+				}
+			}
+		}
 		{
                         g := e.NumVCpus.WithLabelValues(s.Name, s.HostName)
                         g.Set(float64(s.NumVCpus))
