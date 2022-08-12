@@ -17,7 +17,7 @@ type VmsStat struct {
 
 var (
 	vmsNamespace string = "nutanix_vms"
-	vmsLabels	  []string = []string{"vmname", "hostname"}
+	vmsLabels	  []string = []string{"cluster", "vmname", "hostname"}
 )
 
 var vmsStats map[string]string = map[string]string {
@@ -172,23 +172,23 @@ func (e *VmsExporter) Collect(ch chan<- prometheus.Metric) {
 			}
 		}
 		{
-                        g := e.NumVCpus.WithLabelValues(s.Name, s.HostName)
+                        g := e.NumVCpus.WithLabelValues(s.ClusterName, s.Name, s.HostName)
                         g.Set(float64(s.NumVCpus))
                         g.Collect(ch)
 
-                        g = e.MemoryMb.WithLabelValues(s.Name, s.HostName)
+                        g = e.MemoryMb.WithLabelValues(s.ClusterName, s.Name, s.HostName)
                         g.Set(float64(s.MemoryMb))
                         g.Collect(ch)
 
-                        g = e.MemoryCapMb.WithLabelValues(s.Name, s.HostName)
+                        g = e.MemoryCapMb.WithLabelValues(s.ClusterName, s.Name, s.HostName)
                         g.Set(float64(s.MemoryCapMb))
                         g.Collect(ch)
 
-                        g = e.DiskMb.WithLabelValues(s.Name, s.HostName)
+                        g = e.DiskMb.WithLabelValues(s.ClusterName, s.Name, s.HostName)
                         g.Set(float64(s.DiskMb))
                         g.Collect(ch)
 
-                        g = e.PowerState.WithLabelValues(s.Name, s.HostName)
+                        g = e.PowerState.WithLabelValues(s.ClusterName, s.Name, s.HostName)
 			if(s.PowerState == "on") {
 				g.Set(float64(1))
 			} else {
@@ -199,13 +199,13 @@ func (e *VmsExporter) Collect(ch chan<- prometheus.Metric) {
 		}
 		for i, k := range e.UsageStats {
 			v, _ := strconv.ParseFloat(s.UsageStats[i], 64)
-			g := k.WithLabelValues(s.Name, s.HostName)
+			g := k.WithLabelValues(s.ClusterName, s.Name, s.HostName)
 			g.Set(v)
 			g.Collect(ch)
 		}
 		for i, k := range e.Stats {
 			v, _ := strconv.ParseFloat(s.Stats[i], 64)
-			g := k.WithLabelValues(s.Name, s.HostName)
+			g := k.WithLabelValues(s.ClusterName, s.Name, s.HostName)
 			g.Set(v)
 			g.Collect(ch)
 		}
