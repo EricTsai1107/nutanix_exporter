@@ -2,7 +2,7 @@
 package collector
 
 import (
-	"github.com/crlintsai/nutanix_exporter/nutanix"
+	"github.com/erictsai1107/nutanix_exporter/nutanix"
 	"strings"
 )
 

@@ -28,8 +28,6 @@ windows: prepare
 prepare:
 	@echo "Create output directory ./bin/"
 	mkdir -p bin/
-	@echo "Remove Old Synced repository and sync new one"
-	rm -rf /root/go/src/github.com/crlintsai 
 	@echo "GO get dependencies"
 	go get -d
 	
