@@ -3,8 +3,10 @@
 //
 // Prometheus Exportewr for Nutanix API
 //
-// Author: Martin Weber <martin.weber@de.clara.net>
-// Company: Claranet GmbH
+// Origin : Martin Weber <martin.weber@de.clara.net>
+// Author : Eric Tsai <crlin.tsai@msa.hinet.net>
+// Original Company: Claranet GmbH
+// Maintainer : Eric Tsai
 //
 
 package main
